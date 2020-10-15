@@ -1,5 +1,6 @@
-#Event Log Analyzer
-
+# Event Log Analyzer
+[![travis](https://api.travis-ci.org/llicursi/event-log-analyzer.svg?branch=main)](https://travis-ci.org/llicursi/event-log-analyzer)
+[![codecov](https://codecov.io/gh/llicursi/event-log-analyzer/branch/main/graph/badge.svg)](https://codecov.io/gh/llicursi/event-log-analyzer)    
 This project analyzes log files with several events occurrences and persists events with duration longer than 4 ms.
 
 ## Compile
