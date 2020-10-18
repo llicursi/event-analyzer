@@ -35,12 +35,9 @@ dependencies {
 
 test {
     useJUnitPlatform()
-    //finalizedBy jacocoTestReport
 }
 
 task codeCoverageReport(type: JacocoReport) {
-    executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
-
     reports {
         xml.enabled true
         xml.destination file("${buildDir}/reports/jacoco/report.xml")
