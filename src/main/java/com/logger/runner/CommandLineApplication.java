@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class CommandLineApplication implements CommandLineRunner {
 
-    private static Logger LOG = LoggerFactory.getLogger(CommandLineApplication.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CommandLineApplication.class);
 
     @Override
     public void run(String... args) throws Exception {

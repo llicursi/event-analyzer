@@ -3,7 +3,7 @@ plugins {
     id 'org.springframework.boot' version '2.3.4.RELEASE'
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
     id 'java'
-    id 'jacoco'
+  //  id 'jacoco'
 }
 
 group = 'com.logger'
@@ -22,6 +22,7 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.4'
     compileOnly 'org.projectlombok:lombok'
     compileOnly 'net.saliman:gradle-cobertura-plugin:2.4.0'
     runtimeOnly 'org.hsqldb:hsqldb'
@@ -34,7 +35,7 @@ dependencies {
 
 test {
     useJUnitPlatform()
-    finalizedBy jacocoTestReport
+    //finalizedBy jacocoTestReport
 }
 
 task codeCoverageReport(type: JacocoReport) {
