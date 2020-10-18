@@ -50,7 +50,7 @@ class SequentialEventJsonMapperTest {
         assertThat(event.getType()).isNull();
         assertThat(event.getState()).isNull();
         assertThat(event.getTimestamp()).isEqualTo(1602769319555L);
-        assertThat(event.isValid()).isTrue();
+        assertThat(event.isValid()).isFalse();
     }
 
     @Test
