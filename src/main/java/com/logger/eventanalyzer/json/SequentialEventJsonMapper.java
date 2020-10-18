@@ -1,8 +1,8 @@
 package com.logger.eventanalyzer.json;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.logger.eventanalyzer.Event;
 import com.logger.eventanalyzer.EventAnalyzer;
+import com.logger.eventanalyzer.event.Event;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

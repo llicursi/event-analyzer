@@ -1,6 +1,6 @@
 package com.logger.eventanalyzer.json;
 
-import com.logger.eventanalyzer.Event;
+import com.logger.eventanalyzer.event.Event;
 
 import java.util.function.Function;
 
