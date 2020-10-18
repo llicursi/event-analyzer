@@ -18,6 +18,6 @@ public class Event implements Validatable {
     long timestamp;
 
     public boolean isValid() {
-        return id == null || state == null || id.isEmpty() || timestamp < 0;
+        return id != null && state != null && !id.isEmpty() && timestamp > 0;
     }
 }
