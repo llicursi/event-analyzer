@@ -3,6 +3,7 @@ package com.logger.eventanalyzer;
 import com.logger.eventanalyzer.event.Event;
 import com.logger.eventanalyzer.event.Validatable;
 import com.logger.eventanalyzer.json.EventJsonMapper;
+import com.logger.eventanalyzer.json.ParallelEventJsonMapper;
 import com.logger.eventanalyzer.json.SequentialEventJsonMapper;
 import com.logger.eventanalyzer.source.SourceStream;
 import org.slf4j.Logger;
@@ -22,9 +23,13 @@ public class EventAnalyzer {
     }
 
     public void analyze(SourceStream sourceStream, long thresholdDuration, Consumer<? super Event> eventsConsumer) {
-        EventJsonMapper eventJsonMapper = new SequentialEventJsonMapper();
         LOG.debug("Analyzing events sequentially");
-        analyze(sourceStream.stream(), eventJsonMapper, thresholdDuration, eventsConsumer);
+        analyze(sourceStream.stream(), new SequentialEventJsonMapper(), thresholdDuration, eventsConsumer);
+    }
+
+    public void analyzeParallel(SourceStream sourceStream, long thresholdDuration, Consumer<? super Event> eventsConsumer) {
+        LOG.debug("Analyzing events in parallel");
+        analyze(sourceStream.stream(), new ParallelEventJsonMapper(), thresholdDuration, eventsConsumer);
     }
 
     private void analyze(Stream<String> stream, EventJsonMapper eventJsonMapper, long thresholdDuration, Consumer<? super Event> consumer) {

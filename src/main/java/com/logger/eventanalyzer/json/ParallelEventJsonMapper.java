@@ -6,11 +6,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicInteger;
 
-public class SequentialEventJsonMapper implements EventJsonMapper {
+public class ParallelEventJsonMapper implements EventJsonMapper {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SequentialEventJsonMapper.class);
-    private int errorCount = 0;
+    private static final Logger LOG = LoggerFactory.getLogger(ParallelEventJsonMapper.class);
+    private AtomicInteger errorCount = new AtomicInteger(0);
 
     @Override
     public EventEntry apply(String json) {
@@ -18,13 +19,13 @@ public class SequentialEventJsonMapper implements EventJsonMapper {
             return new ObjectMapper().readValue(json, EventEntry.class);
         } catch (IOException e) {
             LOG.debug(e.getMessage());
-            errorCount++;
+            errorCount.incrementAndGet();
             return null;
         }
     }
 
     @Override
     public int getErrorCount() {
-        return errorCount;
+        return errorCount.get();
     }
 }
