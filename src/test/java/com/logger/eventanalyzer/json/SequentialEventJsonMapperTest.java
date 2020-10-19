@@ -1,6 +1,6 @@
 package com.logger.eventanalyzer.json;
 
-import com.logger.eventanalyzer.event.Event;
+import com.logger.eventanalyzer.event.EventEntry;
 import com.logger.eventanalyzer.event.State;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,45 +19,45 @@ class SequentialEventJsonMapperTest {
     @Test
     void givenValidString_thenReturnEvent() {
         String jsonAsString = "{\"id\":\"random6dd1a7\",\"state\":\"STARTED\",\"type\":null,\"host\":null,\"timestamp\":1602769319555}";
-        Event event = sequentialEventJsonMapper.apply(jsonAsString);
-        assertThat(event).isNotNull();
-        assertThat(event.getId()).isEqualTo("random6dd1a7");
-        assertThat(event.getHost()).isNull();
-        assertThat(event.getType()).isNull();
-        assertThat(event.getState()).isEqualTo(State.STARTED);
-        assertThat(event.getTimestamp()).isEqualTo(1602769319555L);
+        EventEntry eventEntry = sequentialEventJsonMapper.apply(jsonAsString);
+        assertThat(eventEntry).isNotNull();
+        assertThat(eventEntry.getId()).isEqualTo("random6dd1a7");
+        assertThat(eventEntry.getHost()).isNull();
+        assertThat(eventEntry.getType()).isNull();
+        assertThat(eventEntry.getState()).isEqualTo(State.STARTED);
+        assertThat(eventEntry.getTimestamp()).isEqualTo(1602769319555L);
     }
 
     @Test
     void givenValidJsonString_whenMissingFields_thenReturnEvent() {
         String jsonAsString = "{\"id\":\"random6dd1a7\",\"state\":\"FINISHED\",\"timestamp\":1602769319555}";
-        Event event = sequentialEventJsonMapper.apply(jsonAsString);
-        assertThat(event).isNotNull();
-        assertThat(event.getId()).isEqualTo("random6dd1a7");
-        assertThat(event.getHost()).isNull();
-        assertThat(event.getType()).isNull();
-        assertThat(event.getState()).isEqualTo(State.FINISHED);
-        assertThat(event.getTimestamp()).isEqualTo(1602769319555L);
+        EventEntry eventEntry = sequentialEventJsonMapper.apply(jsonAsString);
+        assertThat(eventEntry).isNotNull();
+        assertThat(eventEntry.getId()).isEqualTo("random6dd1a7");
+        assertThat(eventEntry.getHost()).isNull();
+        assertThat(eventEntry.getType()).isNull();
+        assertThat(eventEntry.getState()).isEqualTo(State.FINISHED);
+        assertThat(eventEntry.getTimestamp()).isEqualTo(1602769319555L);
     }
 
     @Test
     void givenValidJsonString_whenMissingState_thenReturnInvalidEvent() {
         String jsonAsString = "{\"id\":\"random6dd1a7\",\"timestamp\":1602769319555}";
-        Event event = sequentialEventJsonMapper.apply(jsonAsString);
-        assertThat(event).isNotNull();
-        assertThat(event.getId()).isEqualTo("random6dd1a7");
-        assertThat(event.getHost()).isNull();
-        assertThat(event.getType()).isNull();
-        assertThat(event.getState()).isNull();
-        assertThat(event.getTimestamp()).isEqualTo(1602769319555L);
-        assertThat(event.isValid()).isFalse();
+        EventEntry eventEntry = sequentialEventJsonMapper.apply(jsonAsString);
+        assertThat(eventEntry).isNotNull();
+        assertThat(eventEntry.getId()).isEqualTo("random6dd1a7");
+        assertThat(eventEntry.getHost()).isNull();
+        assertThat(eventEntry.getType()).isNull();
+        assertThat(eventEntry.getState()).isNull();
+        assertThat(eventEntry.getTimestamp()).isEqualTo(1602769319555L);
+        assertThat(eventEntry.isValid()).isFalse();
     }
 
     @Test
     void givenUnParsableString_thenReturnNull() {
         String jsonAsString = "\"id\":\"random6dd1a7\"";
-        Event event = sequentialEventJsonMapper.apply(jsonAsString);
-        assertThat(event).isNull();
+        EventEntry eventEntry = sequentialEventJsonMapper.apply(jsonAsString);
+        assertThat(eventEntry).isNull();
     }
 
     @Test
@@ -77,8 +77,8 @@ class SequentialEventJsonMapperTest {
     @Test
     void givenValidJsonString_whenWrongState_thenReturnNullAndErrorCount() {
         String jsonAsString = "{\"id\":\"random6dd1a7\",\"state\":\"BANANA\",\"timestamp\":1602769319555}";
-        Event event = sequentialEventJsonMapper.apply(jsonAsString);
-        assertThat(event).isNull();
+        EventEntry eventEntry = sequentialEventJsonMapper.apply(jsonAsString);
+        assertThat(eventEntry).isNull();
         assertThat(sequentialEventJsonMapper.getErrorCount()).isEqualTo(1);
     }
 

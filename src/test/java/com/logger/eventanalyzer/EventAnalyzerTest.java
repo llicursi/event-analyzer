@@ -1,6 +1,6 @@
 package com.logger.eventanalyzer;
 
-import com.logger.eventanalyzer.event.EventSummary;
+import com.logger.eventanalyzer.event.Event;
 import com.logger.eventanalyzer.source.StringSourceStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,6 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class EventAnalyzerTest {
 
+    private static final long DEFAULT_THRESHOLD_DURATION = 4L;
     private EventAnalyzer eventAnalyzer;
 
     @BeforeEach
@@ -23,7 +24,7 @@ class EventAnalyzerTest {
         String[] array = {
                 "{\"id\":\"random6dd1a7\",\"state\":\"STARTED\",\"type\":null,\"host\":null,\"timestamp\":1602769319555}\n",
                 "{\"id\":\"random6dd1a7\",\"state\":\"FINISHED\",\"type\":null,\"host\":null,\"timestamp\":1602769319559}\n"};
-        List<EventSummary> events = eventAnalyzer.analyze(new StringSourceStream(array));
+        List<Event> events = eventAnalyzer.analyze(new StringSourceStream(array), DEFAULT_THRESHOLD_DURATION);
         assertThat(events.size()).isEqualTo(1);
     }
 
@@ -33,7 +34,7 @@ class EventAnalyzerTest {
                 "{\"id\":\"random6dd1a7\",\"state\":\"STARTED\",\"type\":null,\"host\":null,\"timestamp\":1602769319555}\n",
                 "{\"id\":\"random6dd1a4\",\"state\":\"FINISHED\",\"type\":null,\"host\":null,\"timestamp\":1602769319561}\n",
                 "{\"id\":\"random6dd1a5\",\"state\":\"FINISHED\",\"type\":null,\"host\":null,\"timestamp\":1602769319559}\n"};
-        List<EventSummary> events = eventAnalyzer.analyze(new StringSourceStream(array));
+        List<Event> events = eventAnalyzer.analyze(new StringSourceStream(array), DEFAULT_THRESHOLD_DURATION);
         assertThat(events.size()).isEqualTo(0);
     }
 
@@ -43,7 +44,7 @@ class EventAnalyzerTest {
                 "{\"id\":\"random6dd1a7\",\"state\":\"STARTED\",\"type\":null,\"host\":null,\"timestamp\":1602769319555}\n",
                 "some-invalid-record",
                 "{\"id\":\"random6dd1a7\",\"state\":\"FINISHED\",\"type\":null,\"host\":null,\"timestamp\":1602769319559}\n"};
-        List<EventSummary> events = eventAnalyzer.analyze(new StringSourceStream(array));
+        List<Event> events = eventAnalyzer.analyze(new StringSourceStream(array), DEFAULT_THRESHOLD_DURATION);
         assertThat(events.size()).isEqualTo(1);
     }
 }

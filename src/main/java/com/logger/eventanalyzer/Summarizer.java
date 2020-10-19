@@ -1,43 +1,48 @@
 package com.logger.eventanalyzer;
 
 import com.logger.eventanalyzer.event.Event;
-import com.logger.eventanalyzer.event.EventSummary;
+import com.logger.eventanalyzer.event.EventEntry;
 import com.logger.eventanalyzer.event.State;
 
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.function.Function;
 
-public class Summarizer implements Function<Event, EventSummary> {
+public class Summarizer implements Function<EventEntry, Event> {
 
-    private final ConcurrentSkipListMap<String, Event> unpairedEvents = new ConcurrentSkipListMap<>();
+    private final ConcurrentSkipListMap<String, EventEntry> unpairedEvents = new ConcurrentSkipListMap<>();
+    private long thresholdDuration;
+
+    public Summarizer(long thresholdDuration){
+        this.thresholdDuration = thresholdDuration;
+    }
 
     @Override
-    public EventSummary apply(Event event) {
-        String id = event.getId();
-        Event unpairedEvent = unpairedEvents.get(id);
-        if (unpairedEvent == null) {
-            unpairedEvents.put(id, event);
+    public Event apply(EventEntry eventEntry) {
+        String id = eventEntry.getId();
+        EventEntry unpairedEventEntry = unpairedEvents.get(id);
+        if (unpairedEventEntry == null) {
+            unpairedEvents.put(id, eventEntry);
             return null;
         } else {
             unpairedEvents.remove(id);
-            return createSummary(event, unpairedEvent);
+            return createSummary(eventEntry, unpairedEventEntry);
         }
     }
 
-    private EventSummary createSummary(Event event, Event relatedEvent) {
-        return (event.getState() == State.STARTED) ?
-                createSummaryFromAlignedPair(event, relatedEvent) :
-                createSummaryFromAlignedPair(relatedEvent, event);
+    private Event createSummary(EventEntry eventEntry, EventEntry relatedEventEntry) {
+        return (eventEntry.getState() == State.STARTED) ?
+                createSummaryFromAlignedPair(eventEntry, relatedEventEntry) :
+                createSummaryFromAlignedPair(relatedEventEntry, eventEntry);
     }
 
-    private EventSummary createSummaryFromAlignedPair(Event startEvent, Event finishEvent) {
-        Long duration = finishEvent.getTimestamp() - startEvent.getTimestamp();
-        return new EventSummary(
-                startEvent.getId(),
+    private Event createSummaryFromAlignedPair(EventEntry startEventEntry, EventEntry finishEventEntry) {
+        Long duration = finishEventEntry.getTimestamp() - startEventEntry.getTimestamp();
+        return new Event(
+                startEventEntry.getId(),
                 duration,
-                startEvent.getTimestamp(),
-                startEvent.getType(),
-                startEvent.getHost()
+                startEventEntry.getType(),
+                startEventEntry.getHost(),
+                duration > thresholdDuration
         );
     }
 

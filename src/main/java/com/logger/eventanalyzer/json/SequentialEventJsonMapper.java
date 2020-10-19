@@ -2,7 +2,7 @@ package com.logger.eventanalyzer.json;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.logger.eventanalyzer.EventAnalyzer;
-import com.logger.eventanalyzer.event.Event;
+import com.logger.eventanalyzer.event.EventEntry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,9 +14,9 @@ public class SequentialEventJsonMapper implements EventJsonMapper {
     private int errorCount = 0;
 
     @Override
-    public Event apply(String json) {
+    public EventEntry apply(String json) {
         try {
-            return new ObjectMapper().readValue(json, Event.class);
+            return new ObjectMapper().readValue(json, EventEntry.class);
         } catch (IOException e) {
             LOG.debug(e.getMessage());
             errorCount++;
