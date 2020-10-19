@@ -1,22 +1,28 @@
 package com.logger.eventanalyzer.event;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicUpdate;
 
+import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+@Entity
 @AllArgsConstructor
-@Getter
-@Table
+@NoArgsConstructor
+@Data
+@Table(name = "events")
+@DynamicUpdate
 public final class Event implements Validatable {
 
     @Id
-    private final String id;
-    private final Long duration;
-    private final String type;
-    private final String host;
-    private final Boolean alert;
+    private String id;
+    private Long duration;
+    private String type;
+    private String host;
+    private Boolean alert;
 
     public boolean isValid() {
         return duration > 0;
