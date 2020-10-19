@@ -1,6 +1,7 @@
 package com.logger.runner;
 
 import com.logger.eventanalyzer.EventService;
+import com.logger.eventanalyzer.config.AnalyzerConfig;
 import com.logger.eventanalyzer.source.FileSourceStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,15 +31,25 @@ public class CommandLineApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
         LOG.info("Running command line with Spring");
         logArguments(args);
-        String fileName = getFileNameOrDefault(args);
+        String fileName = getFilenameArg(args);
         try {
-            eventService.processEvents(new FileSourceStream(new File(fileName)), 4L);
+            AnalyzerConfig config = createAnalyzerConfigFromArguments(fileName, args);
+            eventService.processEvents(config);
         } catch (FileNotFoundException e) {
             LOG.error("File {} not found", fileName);
         }
     }
 
-    private String getFileNameOrDefault(String[] args) {
+    private AnalyzerConfig createAnalyzerConfigFromArguments(String fileName, String[] args) throws FileNotFoundException {
+
+        return AnalyzerConfig.builder()
+                .sourceStream(new FileSourceStream(new File(fileName)))
+                .thresholdDuration(4L)
+                .parallel(getParallelArg(args))
+                .build();
+    }
+
+    private String getFilenameArg(String[] args) {
         if (args.length > 0) {
             for (String arg : args) {
                 if (!arg.startsWith("-")) {
@@ -47,6 +58,15 @@ public class CommandLineApplication implements CommandLineRunner {
             }
         }
         return DEFAULT_FILENAME;
+    }
+
+    private boolean getParallelArg(String[] args) {
+        for (String arg : args) {
+            if (arg.equals("--parallel")) {
+                return true;
+            }
+        }
+        return false;
     }
 
 

@@ -10,7 +10,7 @@ This project analyzes log files with several events occurrences and persists eve
 Assembled jar will be generated on the standard folder `build/libs`
 
 ## Run 
-To execute and process a series of eventEntry logs run the following command;
+To execute and process a series of eventEntry logs run the following command:
 ```
-java -jar eventEntry-logger-1.0.jar <FILE> [--parallel]
+java -jar build/libs/event-analyzer-0.0.1.jar <FILE> [--parallel]
 ```

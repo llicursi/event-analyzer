@@ -1,11 +1,11 @@
 package com.logger.eventanalyzer;
 
+import com.logger.eventanalyzer.config.AnalyzerConfig;
 import com.logger.eventanalyzer.event.Event;
 import com.logger.eventanalyzer.event.Validatable;
 import com.logger.eventanalyzer.json.EventJsonMapper;
 import com.logger.eventanalyzer.json.ParallelEventJsonMapper;
 import com.logger.eventanalyzer.json.SequentialEventJsonMapper;
-import com.logger.eventanalyzer.source.SourceStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -22,14 +22,14 @@ public class EventAnalyzer {
     public EventAnalyzer() {
     }
 
-    public void analyze(SourceStream sourceStream, long thresholdDuration, Consumer<? super Event> eventsConsumer) {
-        LOG.debug("Analyzing events sequentially");
-        analyze(sourceStream.stream(), new SequentialEventJsonMapper(), thresholdDuration, eventsConsumer);
-    }
-
-    public void analyzeParallel(SourceStream sourceStream, long thresholdDuration, Consumer<? super Event> eventsConsumer) {
-        LOG.debug("Analyzing events in parallel");
-        analyze(sourceStream.stream(), new ParallelEventJsonMapper(), thresholdDuration, eventsConsumer);
+    public void analyze(AnalyzerConfig config, Consumer<? super Event> eventsConsumer) {
+        if (config.isParallel()) {
+            LOG.debug("Analyzing events in parallel");
+            analyze(config.getSourceStream().stream().parallel(), new ParallelEventJsonMapper(), config.getThresholdDuration(), eventsConsumer);
+        } else {
+            LOG.debug("Analyzing events sequentially");
+            analyze(config.getSourceStream().stream(), new SequentialEventJsonMapper(), config.getThresholdDuration(), eventsConsumer);
+        }
     }
 
     private void analyze(Stream<String> stream, EventJsonMapper eventJsonMapper, long thresholdDuration, Consumer<? super Event> consumer) {

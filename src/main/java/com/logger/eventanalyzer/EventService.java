@@ -1,7 +1,7 @@
 package com.logger.eventanalyzer;
 
+import com.logger.eventanalyzer.config.AnalyzerConfig;
 import com.logger.eventanalyzer.event.Event;
-import com.logger.eventanalyzer.source.SourceStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +20,11 @@ public class EventService {
     private EventRepository eventRepository;
 
     @Transactional
-    public void processEvents(SourceStream source, long thresholdDuration) {
-        LOG.info("Inspecting events with duration bigger than {} ms", thresholdDuration);
-        eventAnalyzer.analyze(source, thresholdDuration, event -> {
+    public void processEvents(AnalyzerConfig config) {
+        LOG.info("Inspecting events with duration bigger than {} ms", config.getThresholdDuration());
+        eventAnalyzer.analyze(config, event -> {
             inspectEventDuration(event);
             saveEventSummary(event);
-
         });
     }
 
