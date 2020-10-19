@@ -25,7 +25,8 @@ class EventServerTest {
     @InjectMocks
     private EventService eventService;
 
-    private Event mockEvent = new Event("id-1", 10L, null, null, false);
+    private Event mockEvent = new Event("id-1", 10L, null, null, true);
+    private static final long DURATION = 4L;
 
     @BeforeEach
     void setup() {
@@ -35,13 +36,11 @@ class EventServerTest {
     @Test
     void givenSourceProduceSingleEvent_thenPersistsSingleEvent(){
         SourceStream sourceStream = new StringSourceStream("mocked-value");
-
         mockEventAnalyzerToConsumeSeveralMocks(sourceStream, 1);
-
         when(eventRepository.save(any(Event.class))).thenReturn(mockEvent);
-        eventService.processEvents(sourceStream);
+        eventService.processEvents(sourceStream, DURATION);
 
-        verify(eventAnalyzer, times(1) ).analyze(eq(sourceStream), anyLong(), any(Consumer.class));
+        verify(eventAnalyzer, times(1) ).analyze(eq(sourceStream), anyLong(), anyConsumer());
         verify(eventRepository, times(1) ).save(any(Event.class));
     }
 
@@ -50,9 +49,9 @@ class EventServerTest {
         SourceStream sourceStream = new StringSourceStream("mocked-value");
         mockEventAnalyzerToConsumeSeveralMocks(sourceStream, 3);
         when(eventRepository.save(any(Event.class))).thenReturn(mockEvent);
-        eventService.processEvents(sourceStream);
+        eventService.processEvents(sourceStream, DURATION);
 
-        verify(eventAnalyzer, times(1) ).analyze(eq(sourceStream), anyLong(), any(Consumer.class));
+        verify(eventAnalyzer, times(1) ).analyze(eq(sourceStream), anyLong(), anyConsumer());
         verify(eventRepository, times(3) ).save(any(Event.class));
     }
 
@@ -60,10 +59,14 @@ class EventServerTest {
     void givenSourceProduceZeroEvent_thenDontInvokeRepository(){
         SourceStream sourceStream = new StringSourceStream("mocked-value");
         mockEventAnalyzerToConsumeSeveralMocks(sourceStream, 0);
-        eventService.processEvents(sourceStream);
+        eventService.processEvents(sourceStream, DURATION);
 
-        verify(eventAnalyzer, times(1) ).analyze(eq(sourceStream), anyLong(), any(Consumer.class));
+        verify(eventAnalyzer, times(1) ).analyze(eq(sourceStream), anyLong(), anyConsumer());
         verify(eventRepository, never()).save(any(Event.class));
+    }
+
+    private Consumer anyConsumer() {
+        return any(Consumer.class);
     }
 
 
@@ -74,6 +77,6 @@ class EventServerTest {
                 mockConsumer.accept(mockEvent);
             }
             return null;
-        }).when(eventAnalyzer).analyze(eq(sourceStream), anyLong(), any(Consumer.class));
+        }).when(eventAnalyzer).analyze(eq(sourceStream), anyLong(), anyConsumer());
     }
 }

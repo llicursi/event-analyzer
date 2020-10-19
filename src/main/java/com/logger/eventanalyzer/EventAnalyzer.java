@@ -34,7 +34,6 @@ public class EventAnalyzer {
                 .filter(excludeInvalid())
                 .map(new Summarizer(thresholdDuration))
                 .filter(excludeInvalid())
-                .peek(eventAlertConsumer(thresholdDuration))
                 .forEach(consumer);
 
         logFailedParsing(eventJsonMapper);
@@ -50,13 +49,6 @@ public class EventAnalyzer {
         return e -> e != null && e.isValid();
     }
 
-    private Consumer<Event> eventAlertConsumer(long thresholdDuration) {
-        return event -> {
-            if (event.getAlert()) {
-                LOG.info("Event {} is longer than {}ms", event.getId(), thresholdDuration);
-            }
-        };
-    }
 
 
 }

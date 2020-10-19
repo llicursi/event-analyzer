@@ -20,12 +20,23 @@ public class EventService {
     private EventRepository eventRepository;
 
     @Transactional
-    public void processEvents(SourceStream source) {
-        LOG.info("Processing events");
-        eventAnalyzer.analyze(source, 4L, this::saveEventSummary);
+    public void processEvents(SourceStream source, long thresholdDuration) {
+        LOG.info("Inspecting events with duration bigger than {} ms", thresholdDuration);
+        eventAnalyzer.analyze(source, thresholdDuration, event -> {
+            inspectEventDuration(event);
+            saveEventSummary(event);
+
+        });
+    }
+
+    private void inspectEventDuration(Event event) {
+        if (event.getAlert()) {
+            LOG.info("Event {} has duration of {} ms ", event.getId(), event.getDuration());
+        }
     }
 
     private void saveEventSummary(Event event) {
+        LOG.debug("Saving event {}", event.getId());
         eventRepository.save(event);
     }
 }
