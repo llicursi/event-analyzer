@@ -22,7 +22,7 @@ import java.io.FileNotFoundException;
 public class CommandLineApplication implements CommandLineRunner {
 
     private static final Logger LOG = LoggerFactory.getLogger(CommandLineApplication.class);
-    private static final String DEFAULT_FILENAME = "logfile.json";
+    private static final String DEFAULT_FILENAME = "logfile.mapper";
 
     @Autowired
     private EventService eventService;

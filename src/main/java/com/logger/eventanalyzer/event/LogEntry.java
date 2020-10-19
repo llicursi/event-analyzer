@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @Getter
-public class EventEntry implements Validatable {
+public class LogEntry implements Validatable {
 
     String id;
     State state;
