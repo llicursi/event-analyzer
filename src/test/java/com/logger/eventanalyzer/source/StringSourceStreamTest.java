@@ -16,7 +16,6 @@ class StringSourceStreamTest {
         assertThat(collectValues.size()).isEqualTo(0);
     }
 
-
     @Test
     void givenNomEmptyArray_thenReturnStreamWithSameSize(){
         String[] inputArray = {"1", "2", "3", "4"};

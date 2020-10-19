@@ -2,12 +2,12 @@ package com.logger.eventanalyzer.event;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Value;
 
-@Value
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 @AllArgsConstructor
+@Getter
 public class EventEntry implements Validatable {
 
     String id;
