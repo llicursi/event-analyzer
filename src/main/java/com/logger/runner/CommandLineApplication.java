@@ -29,16 +29,26 @@ public class CommandLineApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        LOG.info("Running command line with Spring");
-        logArguments(args);
+        logDebugArguments(args);
         String fileName = getFilenameArg(args);
-        try {
-            AnalyzerConfig config = createAnalyzerConfigFromArguments(fileName, args);
-            eventService.processEvents(config);
-        } catch (FileNotFoundException e) {
-            LOG.error("File {} not found", fileName);
-        }
+        LOG.info("\nAnalyzing events from : {}", fileName);
+        logExecution(() -> {
+            try {
+                AnalyzerConfig config = createAnalyzerConfigFromArguments(fileName, args);
+                eventService.processEvents(config);
+            } catch (FileNotFoundException e) {
+                LOG.error("File {} not found", fileName);
+            }
+        });
     }
+
+    private void logExecution(Runnable runnable) {
+        long startTime = System.currentTimeMillis();
+        runnable.run();
+        LOG.info("Execution completed in {} ms", (System.currentTimeMillis() - startTime));
+        LOG.info("Alert report generated at :\n\tout/reports/event-alerts.log");
+    }
+
 
     private AnalyzerConfig createAnalyzerConfigFromArguments(String fileName, String[] args) throws FileNotFoundException {
 
@@ -70,7 +80,7 @@ public class CommandLineApplication implements CommandLineRunner {
     }
 
 
-    private void logArguments(String[] args) {
+    private void logDebugArguments(String[] args) {
         String joinedArgs = String.join(" ", args);
         LOG.debug("ARGS : '" + joinedArgs + "'");
     }

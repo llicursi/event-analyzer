@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+
 @Service
 public class EventService {
 
@@ -21,7 +23,8 @@ public class EventService {
 
     @Transactional
     public void processEvents(AnalyzerConfig config) {
-        LOG.info("Inspecting events with duration bigger than {} ms", config.getThresholdDuration());
+        LOG.info("\n{}\nInspecting events with duration bigger than {} ms", new Date(), config.getThresholdDuration());
+        LOG.info("===================================================");
         eventAnalyzer.analyze(config, event -> {
             inspectEventDuration(event);
             saveEventSummary(event);
