@@ -5,6 +5,7 @@ import com.logger.eventanalyzer.source.StringSourceStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,7 +25,8 @@ class EventAnalyzerTest {
         String[] array = {
                 "{\"id\":\"random6dd1a7\",\"state\":\"STARTED\",\"type\":null,\"host\":null,\"timestamp\":1602769319555}\n",
                 "{\"id\":\"random6dd1a7\",\"state\":\"FINISHED\",\"type\":null,\"host\":null,\"timestamp\":1602769319559}\n"};
-        List<Event> events = eventAnalyzer.analyze(new StringSourceStream(array), DEFAULT_THRESHOLD_DURATION);
+        List<Event> events = new ArrayList<>();
+        eventAnalyzer.analyze(new StringSourceStream(array), DEFAULT_THRESHOLD_DURATION, events::add);
         assertThat(events.size()).isEqualTo(1);
     }
 
@@ -34,7 +36,8 @@ class EventAnalyzerTest {
                 "{\"id\":\"random6dd1a7\",\"state\":\"STARTED\",\"type\":null,\"host\":null,\"timestamp\":1602769319555}\n",
                 "{\"id\":\"random6dd1a4\",\"state\":\"FINISHED\",\"type\":null,\"host\":null,\"timestamp\":1602769319561}\n",
                 "{\"id\":\"random6dd1a5\",\"state\":\"FINISHED\",\"type\":null,\"host\":null,\"timestamp\":1602769319559}\n"};
-        List<Event> events = eventAnalyzer.analyze(new StringSourceStream(array), DEFAULT_THRESHOLD_DURATION);
+        List<Event> events = new ArrayList<>();
+        eventAnalyzer.analyze(new StringSourceStream(array), DEFAULT_THRESHOLD_DURATION, events::add);
         assertThat(events.size()).isEqualTo(0);
     }
 
@@ -44,7 +47,8 @@ class EventAnalyzerTest {
                 "{\"id\":\"random6dd1a7\",\"state\":\"STARTED\",\"type\":null,\"host\":null,\"timestamp\":1602769319555}\n",
                 "some-invalid-record",
                 "{\"id\":\"random6dd1a7\",\"state\":\"FINISHED\",\"type\":null,\"host\":null,\"timestamp\":1602769319559}\n"};
-        List<Event> events = eventAnalyzer.analyze(new StringSourceStream(array), DEFAULT_THRESHOLD_DURATION);
+        List<Event> events = new ArrayList<>();
+        eventAnalyzer.analyze(new StringSourceStream(array), DEFAULT_THRESHOLD_DURATION, events::add);
         assertThat(events.size()).isEqualTo(1);
     }
 }

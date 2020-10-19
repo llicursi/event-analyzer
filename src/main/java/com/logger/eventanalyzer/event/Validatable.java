@@ -1,4 +1,4 @@
-package com.logger.eventanalyzer;
+package com.logger.eventanalyzer.event;
 
 public interface Validatable {
 

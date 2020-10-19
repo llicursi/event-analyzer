@@ -1,6 +1,5 @@
 package com.logger.eventanalyzer.event;
 
-import com.logger.eventanalyzer.Validatable;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
